@@ -1,0 +1,50 @@
+--- 
+- 
+  apt_repository: 
+    repo: "deb http://packages.elastic.co/log... stable main"
+    state: present
+  name: "Adding logstash APT repository"
+- 
+  apt: 
+    name: logstash
+    state: present
+    update_cache: no
+  name: "Update repositories cache and install Logstash"
+- 
+  file: 
+    path: /etc/pki/tls/certs
+    state: directory
+  name: "Creates SSL directories"
+- 
+  file: 
+    path: /etc/pki/tls/private
+    state: directory
+  name: "Creates SSL directories"
+- 
+  lineinfile: 
+    destfile: /etc/ssl/openssl.cnf
+    line: "subjectAltName = IP: {{ elk_ip }}"
+    regexp: "subjectAltName ="
+  name: "Updating the config file to restrict outside access"
+- 
+  name: "Generate SSL certificates"
+  shell: "openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt"
+- 
+  name: "Configure Beats configuration file"
+  template: "src=beats-input.conf.j2 dest=/etc/logstash/conf.d/02-beats-input.conf owner=root group=root mode=0644"
+- 
+  name: "Configure Syslog Filter"
+  template: "src=syslog-filter.conf.j2 dest=/etc/logstash/conf.d/10-syslog-filter.conf owner=root group=root mode=0644"
+- 
+  name: "Configure Elasticsearch output file"
+  template: "src=elasticsearch-output.conf.j2 dest=/etc/logstash/conf.d/30-elasticsearch-output.conf owner=root group=root mode=0644"
+- 
+  name: "Start Logstash service"
+  service: 
+    name: logstash
+    state: started
+- 
+  name: "Enable Logstash service"
+  service: 
+    enabled: true
+    name: logstash
