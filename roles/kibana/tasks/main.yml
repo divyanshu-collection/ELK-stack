@@ -1,0 +1,27 @@
+--- 
+- 
+  apt_repository: 
+    repo: "deb http://packages.elastic.co/kib... stable main"
+    state: present
+  name: "Adding Kibana APT repository"
+- 
+  apt: 
+    name: kibana
+    update_cache: no
+  name: "Update repositories cache and install Kibana"
+- 
+  lineinfile: 
+    destfile: /etc/kibana/kibana.yml
+    line: "server.host: localhost"
+    regexp: "server.host:"
+  name: "Updating the config file to restrict outside access"
+- 
+  name: "Enabling Kibana service"
+  service: 
+    enabled: yes
+    name: kibana
+- 
+  name: "Starting Kibana service"
+  service: 
+    name: kibana
+    state: started
