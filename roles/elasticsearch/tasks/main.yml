@@ -1,0 +1,27 @@
+--- 
+- 
+  apt_key: 
+    state: present
+    url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+  name: "Add Elasticsearch apt-key"
+- 
+  apt_repository: 
+    repo: "deb https://artifacts.elastic.co/p... stable main"
+    state: present
+  name: "Adding Elasticsearch APT repository"
+- 
+  apt: 
+    name: elasticsearch
+    update_cache: no
+  name: "Update repositories cache and install Elasticsearch"
+- 
+  lineinfile: 
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    line: "network.host: localhost"
+    regexp: "network.host:"
+  name: "Updating the config file to restrict outside access"
+- 
+  name: "Restarting Elasticsearch"
+  service: 
+    name: elasticsearch
+    state: restarted
