@@ -10,18 +10,15 @@
   apt: 
     name: oracle-java8-installer
     state: present
-    update_cache: no
+    update_cache: false
   name: "Install the Java 8 package"
-
- - name: Set JAVA_HOME
-    lineinfile: dest=/etc/environment
-                regexp=''
-                insertafter=EOF
-                line="JAVA_HOME=/usr/lib/jvm/default-java"
-	
-  - name: Verify Java Version
-    action: shell /usr/bin/java -version
-    register: java
-    changed_when: no
-    tags:
-      - verify
+- 
+  lineinfile: "dest=/etc/environment regexp='' insertafter=EOF line=\"JAVA_HOME=/usr/lib/jvm/default-java\""
+  name: "Set JAVA_HOME"
+- 
+  action: "shell /usr/bin/java -version"
+  changed_when: false
+  name: "Verify Java Version"
+  register: java
+  tags: 
+    - verify
