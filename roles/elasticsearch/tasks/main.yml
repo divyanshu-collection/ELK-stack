@@ -11,6 +11,9 @@
     state: present
   name: "Add Elastic repo into source list"
 - 
+  name: "Update APT"
+  shell: "apt update"
+- 
   apt: 
     name: elasticsearch
     state: present
