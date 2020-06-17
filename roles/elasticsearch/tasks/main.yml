@@ -1,17 +1,19 @@
 --- 
 - 
-  apt_key: 
-    state: present
-    url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
-  name: "Add Elasticsearch apt-key"
+  name: "Import Elastic public signing key"
+  shell: "wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -"
+- 
+  apt: "name=apt-transport-https state=present"
+  name: "Install apt-transport-https"
 - 
   apt_repository: 
-    repo: "deb https://artifacts.elastic.co/p... stable main"
+    repo: "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
     state: present
-  name: "Adding Elasticsearch APT repository"
+  name: "Add Elastic repo into source list"
 - 
   apt: 
     name: elasticsearch
+    state: present
     update_cache: no
   name: "Update repositories cache and install Elasticsearch"
 - 
