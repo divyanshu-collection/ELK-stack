@@ -1,9 +1,23 @@
 --- 
 - 
+  name: "Import Elastic public signing key"
+  shell: "wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -"
+- 
+  apt: "name=apt-transport-https state=present"
+  name: "Install apt-transport-https"
+- 
   apt_repository: 
-    repo: "deb http://packages.elastic.co/kib... stable main"
+    repo: "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
     state: present
-  name: "Adding Kibana APT repository"
+  name: "Add Elastic repo into source list"
+#- 
+#  apt_repository: 
+#    repo: "deb http://packages.elastic.co/kib... stable main"
+#    state: present
+#  name: "Adding Kibana APT repository"
+- 
+  name: "Update APT"
+  shell: "apt update"
 - 
   apt: 
     name: kibana
