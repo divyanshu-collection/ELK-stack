@@ -1,5 +1,8 @@
 --- 
 - 
+  name: "Update APT"
+  shell: "apt update"
+- 
   apt: 
     name: nginx
     state: present
