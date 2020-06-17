@@ -7,6 +7,9 @@
   name: "Automatically select the Oracle License"
   shell: "echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections"
 - 
+  name: "Update APT"
+  shell: "apt update"  
+- 
   apt: 
     name: oracle-java8-installer
     state: present
