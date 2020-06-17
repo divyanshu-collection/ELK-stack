@@ -5,6 +5,9 @@
     state: present
   name: "Adding logstash APT repository"
 - 
+  name: "Update APT"
+  shell: "apt update"
+- 
   apt: 
     name: logstash
     state: present
